@@ -1,26 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=Karla:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #131620;
+  --card: #1A1E2C;
+  --t1: #F5F2EB;
+  --t2: rgba(245,242,235,.6);
+  --t3: rgba(245,242,235,.3);
+  --s0: rgba(255,255,255,.04);
+  --s1: rgba(255,255,255,.08);
+  --s2: rgba(255,255,255,.12);
+  --b1: rgba(255,255,255,.08);
+  --b2: rgba(255,255,255,.18);
+  --c1: #E8A87C;
+  --c2: #85CDCA;
+  --c3: #D4A5A5;
+  --c4: #C6D68F;
+  --c5: #9FBBCC;
+  --c6: #E8C170;
+  --c7: #B5B8E8;
+  --c8: #F0B7A4;
+  --c9: #E86A6A;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--t1);
+  font-family: 'Karla', sans-serif;
+  overflow-x: hidden;
 }
+
+button { font-family: 'Karla', sans-serif; border: none; cursor: pointer; color: inherit; }
+
+#app-root {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+}
+
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-33.33%); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade { animation: fadeIn .4s ease; }
+.animate-slide { animation: slideUp .45s ease both; }
+
+/* Range input styling */
+input[type=range] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 5px;
+  background: var(--s2);
+  border-radius: 3px;
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--t1);
+  cursor: pointer;
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 3px rgba(240,237,230,.12);
+}
+input[type=range]::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--t1);
+  cursor: pointer;
+  border: 3px solid var(--bg);
+}
+
+input[type=email]::placeholder { color: var(--t3); }
