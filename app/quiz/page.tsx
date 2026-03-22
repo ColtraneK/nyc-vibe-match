@@ -134,6 +134,9 @@ export default function QuizPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId, resultId }),
         });
+        sessionStorage.removeItem("squadCode");
+        router.push(`/squad/${squadCode}`);
+        return;
       }
 
       router.push(`/results/${resultId}`);

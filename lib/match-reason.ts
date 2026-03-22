@@ -1,7 +1,7 @@
 import { QuizAnswers } from "./scoring";
 import { ScoredNeighborhood } from "./scoring";
 
-const BUDGET_LABELS = ["$1,500", "$2,000", "$2,500", "$3,000", "$3,500+"];
+const BUDGET_LABELS = ["under $1,500", "around $2,000", "around $3,500", "around $4,500", "$5,000+"];
 
 const RANK_LABELS: Record<string, string> = {
   food: "food scene",
@@ -46,27 +46,38 @@ export function generateMatchReason(
   if (budget <= 1) {
     if (match.val >= 8) {
       sentences.push(
-        `You're working with a budget around ${budgetStr}/month, and ${match.n} is one of the honest deals left in the city — the kind of neighborhood where the rent hasn't fully caught up to the quality of life.`
+        `At ${budgetStr}/month, ${match.n} is one of the better deals left in the city — rent hasn't caught up to how good it actually is here.`
       );
     } else {
       sentences.push(
-        `At ${budgetStr}/month you'll need to be selective, but ${match.n} offers the right trade-offs: you're paying for access, culture, and a location that justifies every dollar.`
+        `${budgetStr}/month means being picky, but ${match.n} makes the trade-offs worth it — you're paying for location and access that pull their weight.`
       );
     }
-  } else if (budget >= 3) {
+  } else if (budget === 2) {
+    sentences.push(
+      `At ${budgetStr}/month, ${match.n} doesn't ask you to compromise on what matters.`
+    );
+  } else if (budget === 3) {
     if (match.val <= 3) {
       sentences.push(
-        `You're investing at the ${budgetStr} level, and ${match.n} earns it — the safety scores, restaurant quality, and walkability are among the best in the five boroughs, and it shows.`
+        `At ${budgetStr}/month, ${match.n} earns the price tag — the restaurants, safety, and walkability are some of the best in the five boroughs.`
       );
     } else {
       sentences.push(
-        `At ${budgetStr}/month, ${match.n} gives you more than your money's worth — the pricing hasn't caught up to what the neighborhood actually offers, which is increasingly rare.`
+        `${budgetStr}/month in ${match.n} gets you more than you'd expect — the quality of life here hasn't been priced in yet.`
       );
     }
   } else {
-    sentences.push(
-      `${match.n} fits cleanly in the ${budgetStr} range without asking you to compromise on the things that matter.`
-    );
+    // $10K+
+    if (match.val <= 3) {
+      sentences.push(
+        `At ${budgetStr}/month, you're getting exactly what you'd expect from ${match.n} — top-tier food, safety, and the kind of block where everything just works.`
+      );
+    } else {
+      sentences.push(
+        `With a ${budgetStr} budget, you could live anywhere — and ${match.n} still came out on top because the lifestyle fit is that strong.`
+      );
+    }
   }
 
   // Top priority match
@@ -75,11 +86,11 @@ export function generateMatchReason(
     const label = RANK_LABELS[topPriority.key] || topPriority.key;
     if (dimVal >= 8) {
       sentences.push(
-        `Your top priority was ${label}, and ${match.n} scores ${dimVal}/10 there — that's genuinely strong, not just adequate.`
+        `You put ${label} first, and ${match.n} hits ${dimVal}/10 there — not just decent, actually strong.`
       );
     } else if (dimVal >= 6) {
       sentences.push(
-        `${match.n} holds its own on ${label} (${dimVal}/10), your stated top priority, while covering the other things you flagged too.`
+        `${match.n} does solid on ${label} (${dimVal}/10), your top priority, while still covering the rest of what you care about.`
       );
     }
   }
@@ -99,16 +110,16 @@ export function generateMatchReason(
   // --- Paragraph 2: lifestyle fit ---
   if (noise <= 1 && match.quiet >= 7) {
     sentences.push(
-      `You want actual quiet, and ${match.n} is one of the few places in NYC where midnight on a Tuesday actually sounds like midnight on a Tuesday.`
+      `You want quiet, and ${match.n} actually delivers — midnight here sounds like midnight, not like a crosstown bus route.`
     );
   } else if (noise >= 3 && match.nl >= 7) {
     sentences.push(
-      `Street noise doesn't bother you — and ${match.n} obliges, with a nightlife score of ${match.nl}/10 and the kind of sidewalk energy that some people move to New York specifically for.`
+      `Noise doesn't bother you, and ${match.n} has plenty of it — nightlife at ${match.nl}/10 and the sidewalk energy people move to New York for.`
     );
   } else if (noise === 2) {
     if (match.quiet >= 6 && match.nl >= 5) {
       sentences.push(
-        `${match.n} sits in a useful middle ground: active enough to feel alive, calm enough that you can actually sleep.`
+        `${match.n} splits the difference well: lively enough to feel like the city, calm enough to sleep with the window open.`
       );
     }
   }
@@ -117,19 +128,19 @@ export function generateMatchReason(
     const fridayLabel = FRIDAY_LABELS[fridayVal];
     if (fridayVal === "home" && match.green >= 7) {
       sentences.push(
-        `When plans fall through on a Friday, you prefer ${fridayLabel} — ${match.n} has the parks and the quiet pockets that make that genuinely restorative rather than just default.`
+        `When Friday plans fall through, you'd rather stay in — ${match.n} has the parks and quiet corners that make a night at home feel like a choice, not a consolation prize.`
       );
     } else if (fridayVal === "eat" && match.food >= 8) {
       sentences.push(
-        `Your instinct when plans fall through is ${fridayLabel}, and with a food score of ${match.food}/10, ${match.n} has options at every hour and every price point.`
+        `Your move when plans fall apart is ${fridayLabel}, and ${match.n} (food: ${match.food}/10) has spots open at every hour.`
       );
     } else if (fridayVal === "out" && match.nl >= 7) {
       sentences.push(
-        `You default to going out when the night opens up, and ${match.n} rewards that instinct — there's always something happening within a short walk.`
+        `When the night opens up, you go out — and in ${match.n}, there's always something happening within a few blocks.`
       );
     } else if (fridayVal === "walk" && match.green >= 7) {
       sentences.push(
-        `You like to wander when the night is open, and ${match.n} is the kind of neighborhood that rewards that — interesting blocks, good parks, and enough variety to discover something new.`
+        `You'd rather wander than plan, and ${match.n} is built for that — good blocks, parks nearby, and enough going on that you'll find something.`
       );
     }
   }
@@ -137,15 +148,15 @@ export function generateMatchReason(
   if (sundayVal && SUNDAY_LABELS[sundayVal]) {
     if (sundayVal === "cook" && match.food >= 7 && match.green >= 6) {
       sentences.push(
-        `Sundays built around ${SUNDAY_LABELS[sundayVal]} fit well here — the local market and park access make it easy.`
+        `Your Sunday — ${SUNDAY_LABELS[sundayVal]} — works here. Good markets, park access, the whole setup.`
       );
     } else if (sundayVal === "run" && match.green >= 8) {
       sentences.push(
-        `For ${SUNDAY_LABELS[sundayVal]}, ${match.n} has the green space to make Sunday mornings genuinely good.`
+        `For ${SUNDAY_LABELS[sundayVal]}, ${match.n} has real green space — not just a patch of grass next to a highway.`
       );
     } else if (sundayVal === "marathon" && match.nl >= 6 && match.food >= 7) {
       sentences.push(
-        `The ${SUNDAY_LABELS[sundayVal]} Sunday you described has a natural home in ${match.n}'s restaurant and bar scene.`
+        `That ${SUNDAY_LABELS[sundayVal]} Sunday? ${match.n}'s bar and restaurant scene was made for it.`
       );
     }
   }
@@ -153,7 +164,7 @@ export function generateMatchReason(
   // Fallback if para2 is empty
   if (sentences.length === 0) {
     sentences.push(
-      `The combination of your priorities — the way you weight quietness, access, food, and value — points consistently toward ${match.n}. It's not a compromise; it's a fit.`
+      `The way you balanced quiet, access, food, and value all pointed here. ${match.n} isn't a compromise — it's the answer.`
     );
   }
 
