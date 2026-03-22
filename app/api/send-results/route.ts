@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { generateMatchReason } from "@/lib/match-reason";
+import { rateLimit } from "@/lib/rate-limit";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
@@ -16,9 +17,30 @@ const DIMS = [
 
 export async function POST(req: NextRequest) {
   try {
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      "unknown";
+    const { allowed } = rateLimit(`email:${ip}`, 3, 60_000);
+    if (!allowed) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const { email, resultId, topMatch, answers, allMatches } = await req.json();
+
+    if (!email || !resultId || !topMatch) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+    if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+    }
+    if (!process.env.RESEND_API_KEY) {
+      console.error("RESEND_API_KEY not configured");
+      return NextResponse.json({ error: "Email service not configured" }, { status: 500 });
+    }
+
     const link = `${APP_URL}/results/${resultId}`;
-    const resend = new Resend(process.env.RESEND_API_KEY || "placeholder");
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     const matchReason = answers ? generateMatchReason(answers, topMatch) : "";
     const [para1, para2] = matchReason.split("\n\n");

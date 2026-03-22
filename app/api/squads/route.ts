@@ -13,6 +13,14 @@ function randomCode(len = 6): string {
 export async function POST(req: NextRequest) {
   try {
     const { userId, resultId } = await req.json();
+
+    if (!userId || !resultId) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+    if (typeof userId !== "string" || typeof resultId !== "string") {
+      return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+    }
+
     const supabase = createServerClient();
 
     // Generate unique code

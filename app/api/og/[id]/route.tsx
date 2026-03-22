@@ -122,7 +122,7 @@ export async function GET(
             letterSpacing: "0.1em",
           }}
         >
-          nycvibematch.com
+          nyc-vibe-match.vercel.app
         </div>
       </div>
     ),

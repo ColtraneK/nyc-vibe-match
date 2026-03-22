@@ -5,6 +5,13 @@ export async function POST(req: NextRequest) {
   try {
     const { userId, answers, matches } = await req.json();
 
+    if (!userId || !answers || !matches) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+    if (typeof userId !== "string" || !Array.isArray(matches)) {
+      return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+    }
+
     const supabase = createServerClient();
     const { data, error } = await supabase
       .from("quiz_results")

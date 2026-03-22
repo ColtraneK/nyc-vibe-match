@@ -92,6 +92,7 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<QuizAnswers>({});
   const [userId, setUserId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const id = sessionStorage.getItem("userId");
@@ -138,6 +139,7 @@ export default function QuizPage() {
       router.push(`/results/${resultId}`);
     } catch {
       setSubmitting(false);
+      setError("Something went wrong. Please try again.");
     }
   }
 
@@ -227,6 +229,9 @@ export default function QuizPage() {
             }}
           />
           <p style={{ color: "var(--t2)", fontSize: "14px" }}>Crunching the data...</p>
+          {error && (
+            <p style={{ color: "#E86A6A", fontSize: "14px", marginTop: "8px" }}>{error}</p>
+          )}
         </div>
       ) : q.type === "scenario" ? (
         <ScenarioPick
