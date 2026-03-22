@@ -6,19 +6,20 @@ import { useRouter } from "next/navigation";
 interface Props {
   resultId: string;
   topMatch: { n: string; score: number; c: string };
+  userId: string;
 }
 
-export default function ResultsClient({ resultId, topMatch }: Props) {
+export default function ResultsClient({ resultId, topMatch, userId }: Props) {
   const router = useRouter();
   const [creating, setCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "";
   const shareUrl = `${APP_URL}/results/${resultId}`;
 
   async function createSquad() {
     setCreating(true);
-    const userId = sessionStorage.getItem("userId");
-    if (!userId) { setCreating(false); return; }
+    setError(null);
 
     try {
       const res = await fetch("/api/squads", {
@@ -26,9 +27,11 @@ export default function ResultsClient({ resultId, topMatch }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, resultId }),
       });
+      if (!res.ok) throw new Error("Failed to create squad");
       const { code } = await res.json();
       router.push(`/squad/${code}`);
     } catch {
+      setError("Couldn't create squad. Try again.");
       setCreating(false);
     }
   }
@@ -99,6 +102,9 @@ export default function ResultsClient({ resultId, topMatch }: Props) {
         >
           {creating ? "Creating..." : "Create a Squad"}
         </button>
+        {error && (
+          <p style={{ color: "#E86A6A", fontSize: "13px", marginTop: "10px" }}>{error}</p>
+        )}
       </div>
 
       {/* Share buttons */}

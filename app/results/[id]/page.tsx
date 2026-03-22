@@ -53,7 +53,7 @@ export default async function ResultsPage({
 
   const { data } = await supabase
     .from("quiz_results")
-    .select("id, matches, answers")
+    .select("id, user_id, matches, answers")
     .eq("id", id)
     .single();
 
@@ -141,7 +141,7 @@ export default async function ResultsPage({
       <ResultsAccordion matches={matches} />
 
       {/* Squad + Share CTA */}
-      <ResultsClient resultId={id} topMatch={top} />
+      <ResultsClient resultId={id} topMatch={top} userId={data.user_id} />
     </div>
   );
 }
