@@ -60,6 +60,7 @@ export default function BinaryRapidFire({ pairs, onDone }: Props) {
         }}
       >
         <button
+          className="frost-box"
           onClick={() => pick(pair.aw)}
           style={{
             flex: 1,
@@ -98,6 +99,7 @@ export default function BinaryRapidFire({ pairs, onDone }: Props) {
         </span>
 
         <button
+          className="frost-box"
           onClick={() => pick(pair.bw)}
           style={{
             flex: 1,

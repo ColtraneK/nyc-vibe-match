@@ -61,9 +61,11 @@ export default function ResultsClient({ resultId, topMatch, userId }: Props) {
           margin: "28px 16px 0",
           padding: "24px 20px",
           borderRadius: "16px",
-          background: "rgba(255,255,255,.05)",
-          border: "1px solid rgba(255,255,255,.12)",
+          background: "var(--s1)",
+          border: "1px solid var(--b2)",
           textAlign: "center",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
         }}
       >
         <div style={{ fontSize: "28px", marginBottom: "6px" }}>👥</div>

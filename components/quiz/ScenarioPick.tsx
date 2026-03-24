@@ -18,6 +18,7 @@ export default function ScenarioPick({ opts, onAnswer }: Props) {
       {opts.map((opt) => (
         <button
           key={opt.val}
+          className="frost-box"
           onClick={() => onAnswer({ val: opt.val, w: opt.w })}
           style={{
             display: "flex",
@@ -26,20 +27,20 @@ export default function ScenarioPick({ opts, onAnswer }: Props) {
             width: "100%",
             padding: "16px 18px",
             borderRadius: "14px",
-            background: "rgba(255,255,255,.04)",
-            border: "1.5px solid rgba(255,255,255,.1)",
+            background: "var(--s0)",
+            border: "1.5px solid var(--b1)",
             fontSize: "15px",
             textAlign: "left",
             color: "var(--t1)",
             transition: "all .15s",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,.09)";
-            (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,.2)";
+            (e.currentTarget as HTMLButtonElement).style.background = "var(--s2)";
+            (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--b2)";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,.04)";
-            (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,.1)";
+            (e.currentTarget as HTMLButtonElement).style.background = "var(--s0)";
+            (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--b1)";
           }}
         >
           <span style={{ fontSize: "21px", flexShrink: 0 }}>{opt.icon}</span>

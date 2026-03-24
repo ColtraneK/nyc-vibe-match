@@ -2,6 +2,36 @@
 @import "tailwindcss";
 
 :root {
+  --bg: #FAF8F4;
+  --card: #FFFFFF;
+  --t1: #1A1A1A;
+  --t2: rgba(26,26,26,.55);
+  --t3: rgba(26,26,26,.32);
+  --s0: rgba(0,0,0,.03);
+  --s1: rgba(0,0,0,.05);
+  --s2: rgba(0,0,0,.09);
+  --b1: rgba(0,0,0,.08);
+  --b2: rgba(0,0,0,.15);
+  --c1: #D4884A;
+  --c2: #5BA8A5;
+  --c3: #B87878;
+  --c4: #8FA642;
+  --c5: #5A8BA3;
+  --c6: #C9A030;
+  --c7: #7B7FC5;
+  --c8: #D4836A;
+  --c9: #CC4444;
+  --map-water: #E8E4DC;
+  --map-land: rgba(0,0,0,.05);
+  --map-stroke: rgba(0,0,0,.12);
+  --map-label: rgba(0,0,0,.18);
+  --map-dot: rgba(0,0,0,.16);
+  --map-pill: rgba(255,255,255,.85);
+  --map-pill-text: #1A1A1A;
+  --map-tooltip: #FFFFFF;
+}
+
+:root[data-theme="dark"] {
   --bg: #131620;
   --card: #1A1E2C;
   --t1: #F5F2EB;
@@ -21,6 +51,14 @@
   --c7: #B5B8E8;
   --c8: #F0B7A4;
   --c9: #E86A6A;
+  --map-water: #161D2B;
+  --map-land: rgba(245,242,235,.06);
+  --map-stroke: rgba(245,242,235,.14);
+  --map-label: rgba(245,242,235,.18);
+  --map-dot: rgba(245,242,235,.18);
+  --map-pill: rgba(19,22,32,.75);
+  --map-pill-text: #F5F2EB;
+  --map-tooltip: #1E2235;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -39,6 +77,7 @@ button { font-family: 'Karla', sans-serif; border: none; cursor: pointer; color:
   margin: 0 auto;
   min-height: 100vh;
   position: relative;
+  z-index: 1;
 }
 
 @keyframes scroll {
@@ -63,6 +102,11 @@ button { font-family: 'Karla', sans-serif; border: none; cursor: pointer; color:
 .animate-fade { animation: fadeIn .4s ease; }
 .animate-slide { animation: slideUp .45s ease both; }
 
+.frost-box {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
 /* Range input styling */
 input[type=range] {
   width: 100%;
@@ -81,7 +125,7 @@ input[type=range]::-webkit-slider-thumb {
   background: var(--t1);
   cursor: pointer;
   border: 3px solid var(--bg);
-  box-shadow: 0 0 0 3px rgba(240,237,230,.12);
+  box-shadow: 0 0 0 3px var(--s2);
 }
 input[type=range]::-moz-range-thumb {
   width: 26px;

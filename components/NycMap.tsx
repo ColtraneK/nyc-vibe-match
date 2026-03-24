@@ -56,9 +56,11 @@ export default function NycMap({ matches, squadPins }: Props) {
         width: "calc(100% - 24px)",
         margin: "0 12px 20px",
         borderRadius: "16px",
-        background: "#151B28",
-        border: "1px solid rgba(255,255,255,.1)",
+        background: "var(--card)",
+        border: "1px solid var(--b1)",
         overflow: "hidden",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
       }}
     >
       <svg viewBox="240 -20 560 600" width="100%" style={{ display: "block" }}>
@@ -72,15 +74,15 @@ export default function NycMap({ matches, squadPins }: Props) {
         </defs>
 
         {/* Water */}
-        <rect x="240" y="-20" width="560" height="600" fill="#161D2B" />
+        <rect x="240" y="-20" width="560" height="600" fill="var(--map-water)" />
 
         {/* Borough shapes */}
         {Object.entries(BORO_PATHS).map(([name, d]) => (
           <path
             key={name}
             d={d}
-            fill="rgba(245,242,235,0.06)"
-            stroke="rgba(245,242,235,0.14)"
+            fill="var(--map-land)"
+            stroke="var(--map-stroke)"
             strokeWidth="1.5"
             strokeLinejoin="round"
           />
@@ -92,7 +94,7 @@ export default function NycMap({ matches, squadPins }: Props) {
             key={l.t}
             x={l.x}
             y={l.y}
-            fill="rgba(245,242,235,0.18)"
+            fill="var(--map-label)"
             fontSize="13"
             fontFamily="'JetBrains Mono', monospace"
             textAnchor="middle"
@@ -147,7 +149,7 @@ export default function NycMap({ matches, squadPins }: Props) {
                 cx={h.x}
                 cy={h.y}
                 r={circleR}
-                fill={rank ? h.c : "rgba(245,242,235,0.18)"}
+                fill={rank ? h.c : "var(--map-dot)"}
                 stroke={rank === 1 ? "#fff" : "none"}
                 strokeWidth={rank === 1 ? "2.5" : "0"}
               />
@@ -166,16 +168,24 @@ export default function NycMap({ matches, squadPins }: Props) {
                   >
                     {rank}
                   </text>
+                  <rect
+                    x={h.x + (rank === 1 ? 15 : 11)}
+                    y={h.y - (rank === 1 ? 8 : 7)}
+                    width={h.n.length * (rank === 1 ? 7.5 : 6.2) + 8}
+                    height={rank === 1 ? 18 : 16}
+                    rx="4"
+                    fill="var(--map-pill)"
+                    style={{ pointerEvents: "none" }}
+                  />
                   <text
-                    x={h.x + (rank === 1 ? 17 : 13)}
+                    x={h.x + (rank === 1 ? 19 : 15)}
                     y={h.y + 1}
                     textAnchor="start"
                     dominantBaseline="central"
-                    fill="var(--t1)"
+                    fill="var(--map-pill-text)"
                     fontSize={rank === 1 ? "12" : "10"}
                     fontWeight={rank <= 2 ? "600" : "400"}
                     fontFamily="'Karla', sans-serif"
-                    opacity={rank <= 3 ? 1 : 0.65}
                     style={{ pointerEvents: "none" }}
                   >
                     {h.n}
@@ -230,7 +240,7 @@ export default function NycMap({ matches, squadPins }: Props) {
         <div
           style={{
             position: "absolute",
-            background: "#1E2235",
+            background: "var(--map-tooltip)",
             border: "1px solid var(--b2)",
             borderRadius: "10px",
             padding: "10px 14px",

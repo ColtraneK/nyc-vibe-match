@@ -113,6 +113,7 @@ export default function DragToRank({ items: initialItems, onNext }: Props) {
           <div
             key={item.key}
             ref={(el) => { itemRefs.current[i] = el; }}
+            className="frost-box"
             draggable
             onDragStart={() => handleDragStart(i)}
             onDragOver={(e) => handleDragOver(e, i)}

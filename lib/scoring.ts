@@ -118,11 +118,11 @@ export function scoreAll(ans: QuizAnswers): ScoredNeighborhood[] {
       if (h.nl >= 8 && h.food >= 8) s += 3;
     }
 
-    // Mismatch penalties
-    if (w.quiet > 3 && h.quiet <= 3) s -= 6;
-    if (w.nl > 3 && h.nl <= 3) s -= 6;
-    if (w.safe > 3 && h.safe <= 4) s -= 5;
-    if (w.green > 3 && h.green <= 3) s -= 5;
+    // Mismatch penalties — only trigger on strong preferences vs very low scores
+    if (w.quiet > 5 && h.quiet <= 3) s -= 5;
+    if (w.nl > 5 && h.nl <= 3) s -= 5;
+    if (w.safe > 5 && h.safe <= 3) s -= 4;
+    if (w.green > 5 && h.green <= 3) s -= 4;
 
     return { ...h, raw: s };
   });

@@ -36,11 +36,13 @@ function AccordionItem({ match, rank, isTop }: { match: Match; rank: number; isT
     <div
       style={{
         borderRadius: "14px",
-        background: isTop ? "rgba(255,255,255,.07)" : "rgba(255,255,255,.035)",
-        border: `1px solid ${isTop ? "rgba(255,255,255,.16)" : "rgba(255,255,255,.07)"}`,
+        background: isTop ? "var(--s1)" : "var(--s0)",
+        border: `1px solid ${isTop ? "var(--b2)" : "var(--b1)"}`,
         marginBottom: "8px",
         overflow: "hidden",
         transition: "border-color .2s",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
       }}
     >
       {/* Header row - always visible */}

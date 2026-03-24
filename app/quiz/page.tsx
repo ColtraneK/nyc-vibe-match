@@ -9,6 +9,7 @@ import DragToRank from "@/components/DragToRank";
 import NoiseSlider from "@/components/quiz/NoiseSlider";
 import VibeGrid from "@/components/quiz/VibeGrid";
 import { scoreAll, QuizAnswers } from "@/lib/scoring";
+import { isPlausibleEmail } from "@/lib/email-plausible";
 
 const QUESTIONS = [
   {
@@ -118,8 +119,8 @@ export default function QuizPage() {
       const { id: resultId } = await res.json();
       sessionStorage.setItem("lastResultId", resultId);
 
-      // Send email
-      if (email) {
+      // Send email only if it looks like a real address
+      if (email && isPlausibleEmail(email)) {
         await fetch("/api/send-results", {
           method: "POST",
           headers: { "Content-Type": "application/json" },

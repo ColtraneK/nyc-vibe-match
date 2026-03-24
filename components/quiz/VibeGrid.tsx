@@ -25,6 +25,7 @@ export default function VibeGrid({ cells, onAnswer }: Props) {
       {cells.map((cell) => (
         <button
           key={cell.val}
+          className="frost-box"
           onClick={() => onAnswer({ val: cell.val, w: cell.w })}
           style={{
             display: "flex",

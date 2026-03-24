@@ -39,8 +39,8 @@ export default function MetroCard({ match, rank }: Props) {
       style={{
         borderRadius: "16px",
         overflow: "hidden",
-        background: "#1A2030",
-        border: "1px solid rgba(255,255,255,.16)",
+        background: "var(--card)",
+        border: "1px solid var(--b2)",
         margin: "0 16px 16px",
       }}
     >
