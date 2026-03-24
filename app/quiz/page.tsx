@@ -104,6 +104,20 @@ export default function QuizPage() {
     }
   }, [router]);
 
+  // Lock body scroll while quiz is active
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+    document.body.style.height = "100%";
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.height = "";
+    };
+  }, []);
+
   async function finishQuiz(finalAnswers: QuizAnswers) {
     setSubmitting(true);
     const matches = scoreAll(finalAnswers);
@@ -166,10 +180,11 @@ export default function QuizPage() {
       style={{
         height: "calc(100vh - 28px)",
         paddingTop: "32px",
-        paddingBottom: "40px",
+        paddingBottom: "16px",
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
+        overscrollBehavior: "none",
       }}
       className="animate-fade"
     >

@@ -94,12 +94,13 @@ export default function DragToRank({ items: initialItems, onNext }: Props) {
   }, []);
 
   return (
-    <div style={{ padding: "0 24px" }}>
+    <div style={{ padding: "0 24px", display: "flex", flexDirection: "column", height: "100%" }}>
       <div
         style={{
           fontSize: "12px",
           color: "var(--t3)",
           marginBottom: "12px",
+          flexShrink: 0,
         }}
       >
         Drag or tap to move to top - #1 = must-have
@@ -107,7 +108,7 @@ export default function DragToRank({ items: initialItems, onNext }: Props) {
 
       <div
         ref={listRef}
-        style={{ display: "flex", flexDirection: "column", gap: "6px", userSelect: "none" }}
+        style={{ display: "flex", flexDirection: "column", gap: "6px", userSelect: "none", flex: 1, minHeight: 0 }}
       >
         {items.map((item, i) => (
           <div
@@ -155,7 +156,7 @@ export default function DragToRank({ items: initialItems, onNext }: Props) {
         ))}
       </div>
 
-      <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "28px" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "16px", paddingBottom: "8px", flexShrink: 0 }}>
         <button
           onClick={() => onNext(items)}
           style={{
