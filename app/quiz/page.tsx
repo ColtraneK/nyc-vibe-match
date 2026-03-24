@@ -163,7 +163,14 @@ export default function QuizPage() {
 
   return (
     <div
-      style={{ minHeight: "calc(100vh - 28px)", paddingTop: "32px", paddingBottom: "40px" }}
+      style={{
+        height: "calc(100vh - 28px)",
+        paddingTop: "32px",
+        paddingBottom: "40px",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+      }}
       className="animate-fade"
     >
       {/* Progress dots */}
@@ -212,6 +219,7 @@ export default function QuizPage() {
       </div>
 
       {/* Question component */}
+      <div style={{ flex: 1, overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
       {submitting ? (
         <div
           style={{
@@ -262,6 +270,7 @@ export default function QuizPage() {
           onAnswer={(ans) => handleAnswer(q.id, ans)}
         />
       ) : null}
+      </div>
     </div>
   );
 }
