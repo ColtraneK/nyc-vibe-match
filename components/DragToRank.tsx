@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 
 export interface RankItem {
   key: string;
@@ -18,6 +18,8 @@ export default function DragToRank({ items: initialItems, onNext }: Props) {
   const [draggingIdx, setDraggingIdx] = useState<number | null>(null);
   const [overIdx, setOverIdx] = useState<number | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const touchState = useRef<{ idx: number; moved: boolean; overIdx: number | null } | null>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   function handleDragStart(i: number) {
     setDraggingIdx(i);
@@ -51,6 +53,46 @@ export default function DragToRank({ items: initialItems, onNext }: Props) {
     setItems(next);
   }
 
+  // Touch handlers for mobile drag-to-reorder
+  const handleTouchStart = useCallback((i: number) => {
+    touchState.current = { idx: i, moved: false, overIdx: null };
+    setDraggingIdx(i);
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (touchState.current === null) return;
+    e.preventDefault();
+    touchState.current.moved = true;
+    const touch = e.touches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (!target) return;
+    const hitIdx = itemRefs.current.findIndex(
+      (el) => el && (el === target || el.contains(target))
+    );
+    if (hitIdx !== -1) {
+      touchState.current.overIdx = hitIdx;
+      setOverIdx(hitIdx);
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (touchState.current === null) return;
+    const fromIdx = touchState.current.idx;
+    const toIdx = touchState.current.overIdx;
+    const wasDrag = touchState.current.moved;
+    touchState.current = null;
+    if (wasDrag && toIdx !== null && toIdx !== fromIdx) {
+      setItems((prev) => {
+        const next = [...prev];
+        const [moved] = next.splice(fromIdx, 1);
+        next.splice(toIdx, 0, moved);
+        return next;
+      });
+    }
+    setDraggingIdx(null);
+    setOverIdx(null);
+  }, []);
+
   return (
     <div style={{ padding: "0 24px" }}>
       <div
@@ -70,11 +112,15 @@ export default function DragToRank({ items: initialItems, onNext }: Props) {
         {items.map((item, i) => (
           <div
             key={item.key}
+            ref={(el) => { itemRefs.current[i] = el; }}
             draggable
             onDragStart={() => handleDragStart(i)}
             onDragOver={(e) => handleDragOver(e, i)}
             onDrop={() => handleDrop(i)}
             onDragEnd={handleDragEnd}
+            onTouchStart={() => handleTouchStart(i)}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
             onClick={() => handleTapToTop(i)}
             style={{
               display: "flex",
