@@ -1,4 +1,7 @@
-import { ScoredNeighborhood } from "@/lib/scoring";
+"use client";
+
+import { useEffect, useState } from "react";
+import { ScoredNeighborhood, matchLabel } from "@/lib/scoring";
 
 interface Props {
   match: ScoredNeighborhood;
@@ -21,7 +24,25 @@ function dimColor(val: number, color: string): string {
   return `${color}55`;
 }
 
+function useCountUp(target: number, duration = 1200) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    const start = Date.now();
+    const tick = () => {
+      const elapsed = Date.now() - start;
+      const t = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setVal(Math.round(eased * target));
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [target, duration]);
+  return val;
+}
+
 export default function MetroCard({ match, rank }: Props) {
+  const displayScore = useCountUp(match.score);
+
   const now = new Date();
   const timestamp = now.toLocaleTimeString("en-US", {
     hour: "2-digit",
@@ -111,12 +132,12 @@ export default function MetroCard({ match, rank }: Props) {
         <div
           style={{
             display: "flex",
-            alignItems: "baseline",
+            alignItems: "center",
             justifyContent: "space-between",
             marginBottom: "10px",
           }}
         >
-          <div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: "2px" }}>
             <span
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
@@ -125,7 +146,7 @@ export default function MetroCard({ match, rank }: Props) {
                 color: match.c,
               }}
             >
-              {match.score}
+              {displayScore}
             </span>
             <span
               style={{
@@ -135,21 +156,25 @@ export default function MetroCard({ match, rank }: Props) {
                 color: "var(--t2)",
               }}
             >
-              % match
+              %
             </span>
           </div>
-          {rank && (
-            <div
-              style={{
-                fontFamily: "'Karla', sans-serif",
-                fontSize: "12px",
-                color: "var(--t2)",
-                fontStyle: "italic",
-              }}
-            >
-              #{rank} pick
-            </div>
-          )}
+          <span
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: "10px",
+              fontWeight: 700,
+              letterSpacing: ".06em",
+              textTransform: "uppercase",
+              background: `${match.c}22`,
+              color: match.c,
+              padding: "4px 10px",
+              borderRadius: "100px",
+              border: `1px solid ${match.c}50`,
+            }}
+          >
+            {rank === 1 ? "Your perfect match" : matchLabel(match.score)}
+          </span>
         </div>
 
         {/* Tagline */}

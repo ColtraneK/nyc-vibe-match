@@ -31,6 +31,12 @@ export interface ScoredNeighborhood extends Neighborhood {
   raw: number;
 }
 
+export function matchLabel(score: number): string {
+  if (score >= 90) return "Perfect fit";
+  if (score >= 80) return "Strong match";
+  return "Good match";
+}
+
 export function scoreAll(ans: QuizAnswers): ScoredNeighborhood[] {
   const w: Weights = { quiet: 0, food: 0, nl: 0, transit: 0, green: 0, safe: 0, val: 0 };
   const dims = ["quiet", "food", "nl", "transit", "green", "safe", "val"] as const;
