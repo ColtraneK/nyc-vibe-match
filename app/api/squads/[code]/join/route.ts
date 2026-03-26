@@ -56,7 +56,7 @@ export async function POST(
         const squadUrl = `${APP_URL}/squad/${squad.code}`;
 
         await resend.emails.send({
-          from: "NYC Vibe Match <onboarding@resend.dev>",
+          from: "NYC Vibe Match <nyc-quiz@email.aidgentic.com>",
           to: creatorEmail,
           subject: `Someone joined your squad — they got ${joinerMatch.n}`,
           html: `<!DOCTYPE html>
