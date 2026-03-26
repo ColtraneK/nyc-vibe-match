@@ -127,18 +127,15 @@ export function scoreAll(ans: QuizAnswers): ScoredNeighborhood[] {
     return { ...h, raw: s };
   });
 
-  const scores = raw.map((r) => r.raw);
-  const mn = Math.min(...scores);
-  const mx = Math.max(...scores);
-  const rng = mx - mn || 1;
+  const top5 = raw.sort((a, b) => b.raw - a.raw).slice(0, 5);
 
-  return raw
-    .map((r) => {
-      const normalized = (r.raw - mn) / rng;
-      const curved = Math.pow(normalized, 0.7);
-      const score = Math.round(28 + curved * 68);
-      return { ...r, score: Math.min(score, 96) };
-    })
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5);
+  const topRaw = top5[0].raw;
+  const botRaw = top5[4].raw;
+  const rng = topRaw - botRaw || 1;
+
+  return top5.map((r) => {
+    const t = (r.raw - botRaw) / rng; // 0..1 within top 5
+    const score = Math.round(72 + t * 23); // spreads from 72% to 95%
+    return { ...r, score };
+  });
 }
