@@ -6,6 +6,7 @@ import NycMap from "@/components/NycMap";
 import ResultsClient from "./ResultsClient";
 import ResultsAccordion from "@/components/ResultsAccordion";
 import { generateMatchReason } from "@/lib/match-reason";
+import { matchLabel } from "@/lib/scoring";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "";
 
@@ -24,7 +25,7 @@ export async function generateMetadata({
 
   const top = data?.matches?.[0];
   const title = top
-    ? `My NYC match: ${top.n} (${top.score}%)`
+    ? `${top.n} — ${matchLabel(top.score)} | NYC Vibe Match`
     : "NYC Vibe Match Results";
 
   return {

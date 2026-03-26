@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { matchLabel } from "@/lib/scoring";
 
 interface Props {
   resultId: string;
@@ -45,7 +46,7 @@ export default function ResultsClient({ resultId, topMatch, userId }: Props) {
   async function nativeShare() {
     if (navigator.share) {
       await navigator.share({
-        title: `My NYC match: ${topMatch.n} (${topMatch.score}%)`,
+        title: `I matched with ${topMatch.n} — ${matchLabel(topMatch.score)} | NYC Vibe Match`,
         url: shareUrl,
       });
     } else {

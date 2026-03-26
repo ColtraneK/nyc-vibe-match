@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { matchLabel } from "@/lib/scoring";
 
 interface Match {
   id: string;
@@ -29,8 +30,25 @@ const DIMS = [
   { key: "val" as const, label: "VALUE" },
 ];
 
+function useCountUp(target: number, duration = 1000) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    const start = Date.now();
+    const tick = () => {
+      const elapsed = Date.now() - start;
+      const t = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setVal(Math.round(eased * target));
+      if (t < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [target, duration]);
+  return val;
+}
+
 function AccordionItem({ match, rank, isTop }: { match: Match; rank: number; isTop: boolean }) {
   const [open, setOpen] = useState(isTop);
+  const displayScore = useCountUp(match.score);
 
   return (
     <div
@@ -93,15 +111,30 @@ function AccordionItem({ match, rank, isTop }: { match: Match; rank: number; isT
           </div>
         </div>
 
-        <div
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontWeight: 700,
-            fontSize: "18px",
-            color: match.c,
-          }}
-        >
-          {match.score}%
+        <div style={{ textAlign: "right", flexShrink: 0 }}>
+          <div
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontWeight: 700,
+              fontSize: "18px",
+              color: match.c,
+            }}
+          >
+            {displayScore}%
+          </div>
+          <div
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: "8px",
+              color: match.c,
+              opacity: 0.75,
+              letterSpacing: ".05em",
+              textTransform: "uppercase",
+              marginTop: "1px",
+            }}
+          >
+            {matchLabel(match.score)}
+          </div>
         </div>
 
         <div
