@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
     ).join("");
 
     await resend.emails.send({
-      from: "NYC Vibe Match <onboarding@resend.dev>",
+      from: "NYC Vibe Match <nyc-quiz@email.aidgentic.com>",
       to: email,
       subject: `Your NYC match: ${topMatch.n} (${topMatch.score}%)`,
       html: `<!DOCTYPE html>
